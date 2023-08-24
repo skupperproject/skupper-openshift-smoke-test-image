@@ -1,0 +1,1 @@
+# skupper-openshift-smoke-test-image
