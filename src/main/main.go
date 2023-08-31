@@ -326,8 +326,14 @@ func run() error {
 	ctx, cn := context.WithTimeout(context.Background(), time.Minute*30)
 	defer cn()
 
-	pubCli, _ := skupper_ocp_smoke.NewClient("", pubKubeconfigFile, skupper_ocp_smoke.PUBNS)
-	privCli, _ := skupper_ocp_smoke.NewClient("", privKubeconfigFile, skupper_ocp_smoke.PRIVNS)
+	pubCli, err := skupper_ocp_smoke.NewClient("", pubKubeconfigFile, skupper_ocp_smoke.PUBNS)
+	if err != nil {
+		return fmt.Errorf("Error creating pubCli - %s", err.Error())
+	}
+	privCli, err := skupper_ocp_smoke.NewClient("", privKubeconfigFile, skupper_ocp_smoke.PRIVNS)
+	if err != nil {
+		return fmt.Errorf("Error creating privCli - %s", err.Error())
+	}
 
 	// Run the Setup and test
 	if strings.ToUpper(os.Getenv("STEP")) == "SETUP" || os.Getenv("STEP") == "" {
