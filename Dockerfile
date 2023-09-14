@@ -1,12 +1,10 @@
 FROM golang:1.19 AS builder
 
 WORKDIR /image
-COPY src/go.mod .
-COPY src/go.sum .
-RUN go mod download
 COPY . .
 
 WORKDIR /image/src
+RUN go mod download
 RUN make all
 RUN go get github.com/jstemmer/go-junit-report
 RUN go install github.com/jstemmer/go-junit-report
