@@ -12,28 +12,28 @@
 
 **docker**:
 
-    "docker run -v /home/localuser/kubeconfigs/:/config  -it --env PUBKUBECONFIG=/config/config-ocp49 --env PRIVKUBECONFIG=/config/config-ocp410 --env QUIET=TRUE quay.io/skupper/skupper-ocp-smoke-test-image"
+    docker run -v /home/localuser/kubeconfigs/:/config  -it --env PUBKUBECONFIG=/config/config-ocp49 --env PRIVKUBECONFIG=/config/config-ocp410 --env QUIET=TRUE quay.io/skupper/skupper-ocp-smoke-test-image
 
 <br>
 <br>
 
 **podman**:
 
-    "podman run -v /home/localuser/kubeconfigs/:/config  -it --env PUBKUBECONFIG=/config/config-ocp49 --env PRIVKUBECONFIG=/config/config-ocp410 --env QUIET=TRUE quay.io/skupper/skupper-ocp-smoke-test-image"
+    podman run -v /home/localuser/kubeconfigs/:/config  -it --env PUBKUBECONFIG=/config/config-ocp49 --env PRIVKUBECONFIG=/config/config-ocp410 --env QUIET=TRUE quay.io/skupper/skupper-ocp-smoke-test-image
 
 <br>
 <br>
 
 **Openshift**:
 
-    "oc create -f skupper-ocp-smoke-test.yaml -n [namespace]"
+    oc create -f skupper-ocp-smoke-test.yaml -n [namespace]
 
 <br>
 
 Openshift
 ==========
 
- Use the script generate-yaml.sh to generate the YAMl file to run the Skupper Openshift smoke tests.
+ Use the script generate-yaml.sh to generate the YAML file to run the Skupper Openshift smoke tests.
 
  You can use one or two clusters.
  If you want to use only one cluster, you must provide the path to the kubeconfig file, and both namespaces will be created in that cluster.
@@ -119,26 +119,37 @@ Docker / Podman
 
   Usually you don't need to specify a step, but if you need, you can do it using the STEP environment variable :
 
-    "-- env STEP=SETUP"<br>
-    ** This will create the namespaces, deploy the Skupper instances and the services, but will not validate the test. It can be used for debugging purposes.
+    "-- env STEP=SETUP"
+    ** This will create the namespaces, deploy the Skupper instances and the 
+       services, but will not validate the test. It can be used for debugging
+       purposes.
 
-    "-- env STEP=RUNTEST"<br>
-    ** This will run the test, using the scenario from the SETUP step, and then it will run the TEARDOWN step, removing all the created resources from the cluster.
+    "-- env STEP=RUNTEST"
+    ** This will run the test, using the scenario from the SETUP step, and then
+       it will run the TEARDOWN step, removing all the created resources from 
+       the cluster.
 
-    "-- env SKIPTEARDOWN=TRUE"<br>
-    ** This will skip the teardown phase, if you are running the RUNTEST step or the full test ( not specifying a STEP )
+    "-- env SKIPTEARDOWN=TRUE"
+    ** This will skip the teardown phase, if you are running the RUNTEST step
+       or the full test ( not specifying a STEP )
     ** This can be useful for debugging purposes
 
-    "-- env STEP=TEARDOWN"<br>
+    "-- env STEP=TEARDOWN"
     ** This will remove all the created resources from the cluster.
 
-    "-- env STARTINGCSV=1.2.3.4"<br>
-    ** By default, the test installs the latest operator from the Operator Hub. If you need to test a specific version, you can specify the version.
+    "-- env STARTINGCSV=1.2.3.4"
+    ** By default, the test installs the latest operator from the Operator Hub.
+       If you need to test a specific version, you can specify the version.
 
-    "-- env CLEANBEFORE=TRUE"<br>
-    ** Use this environment variable to force the test setup to remove the namespace used in the test before it starts, usually to avoid any conflict with previous test runs.
-    ** This options affects only the step SETUP or the full test run ( without any STEP specified )
+    "-- env CLEANBEFORE=TRUE"
+    ** Use this environment variable to force the test setup to remove the 
+       namespace used in the test before it starts, usually to avoid any 
+       conflict with previous test runs.
+    ** This options affects only the step SETUP or the full test run 
+       ( without any STEP specified )
 
-    "-- env WAITLIMIT=180"<br>
-    ** By default, the test waits until 120 seconds for the operations to get completed, like the link creation or the test to run.
-    If you need more time, you can specify it using this variable. It can be useful when using multiple clusters.
+    "-- env WAITLIMIT=180"
+    ** By default, the test waits until 120 seconds for the operations to get
+       completed, like the link creation or the test to run.
+       If you need more time, you can specify it using this variable. It can be
+       useful when using multiple clusters.
