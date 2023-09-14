@@ -88,11 +88,13 @@ Docker / Podman
 
   If you are using a kubeconfig file with a different name, you must specify it using the "--env" parameter, like this :
 
-    "--env PUBKUBECONFIG=/config/config-ocp-4-9 --env PRIVKUBECONFIG=/config/config-ocp-4-9"<br>
-    ** In this case, we are using a unique cluster, note that both environment variables points to the same kubeconfig file
+    "--env PUBKUBECONFIG=/config/config-ocp-4-9 --env PRIVKUBECONFIG=/config/config-ocp-4-9"
+    ** In this case, we are using a unique cluster, note that both environment variables
+       points to the same kubeconfig file
 
-    "--env PUBKUBECONFIG=/config/config-ocp-4-9 --env PRIVKUBECONFIG=/config/config-ocp-4-10"<br>
-    ** In this case, we are using different clusters, note that each environment variables points to distinct kubeconfig file
+    "--env PUBKUBECONFIG=/config/config-ocp-4-9 --env PRIVKUBECONFIG=/config/config-ocp-4-10"
+    ** In this case, we are using different clusters, note that each environment variables
+       points to distinct kubeconfig file
 
   <br>  This test image creates some debug messages by default, and if you want to disable them, you must set the QUIET environment variable :
 
