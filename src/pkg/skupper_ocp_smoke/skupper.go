@@ -16,7 +16,9 @@ func (cli *Client) DeploySkupper(ctx context.Context, skupperConfigMap *v1.Confi
 
 	_, err := cli.KubeClient.CoreV1().ConfigMaps(cli.Namespace).Create(ctx, skupperConfigMap, v12.CreateOptions{})
 	if err != nil {
-		return fmt.Errorf("unable to deploy Skupper instance on namespace %s", cli.Namespace)
+		if !strings.Contains(err.Error(), "\"skupper-site\" already exists") {
+			return fmt.Errorf("unable to deploy Skupper instance on namespace %s - reason : %s", cli.Namespace, err.Error())
+		}
 	}
 	return nil
 }
@@ -33,7 +35,9 @@ func (cli *Client) CreateSkupperToken(ctx context.Context) error {
 	}, v12.CreateOptions{})
 
 	if err != nil {
-		return fmt.Errorf("unable to create public token : %s", err.Error())
+		if !strings.Contains(err.Error(), "\"pub-secret\" already exists") {
+			return fmt.Errorf("unable to create public token. Reason :  %s", err.Error())
+		}
 	}
 
 	return nil
@@ -75,7 +79,9 @@ func (cli *Client) CreateSkupperLink(ctx context.Context, populatedToken *v1.Sec
 		Type: "kubernetes.io/tls",
 	}, v12.CreateOptions{})
 	if err != nil {
-		return fmt.Errorf("unable to create link : %v", err.Error())
+		if !strings.Contains(err.Error(), "\"priv-secret\" already exists") {
+			return fmt.Errorf("unable to create link : %v", err.Error())
+		}
 	}
 	return nil
 }
@@ -148,7 +154,9 @@ func (cli *Client) CreateDeploymentWithSkupper(ctx context.Context, name string,
 	// Deploying resource
 	_, err := cli.KubeClient.AppsV1().Deployments(cli.Namespace).Create(ctx, dep, v12.CreateOptions{})
 	if err != nil {
-		return fmt.Errorf("unable to create deployment %s on namespace %s", name, cli.Namespace)
+		if !strings.Contains(err.Error(), "\"priv-deploy\" already exists") {
+			return fmt.Errorf("unable to create deployment %s on namespace %s. Reason : %s", name, cli.Namespace, err.Error())
+		}
 	}
 	return nil
 }

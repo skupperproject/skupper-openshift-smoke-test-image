@@ -61,7 +61,9 @@ func setup(ctx context.Context, pubCli *skupper_ocp_smoke.Client, privCli *skupp
 	for _, cli := range cliList {
 		// Create the operatorgroup
 		if err := cli.CreateOperatorGroup(step); err != nil {
-			return fmt.Errorf("%s : %s", step, err.Error())
+			if !strings.Contains(err.Error(), "\"test-operator-group\" already exists") {
+				return fmt.Errorf("%s : %s", step, err.Error())
+			}
 		}
 		skupper_ocp_smoke.PrintIfDebug(step, ": OperatorGroup created into", cli.Namespace)
 	}
@@ -70,14 +72,19 @@ func setup(ctx context.Context, pubCli *skupper_ocp_smoke.Client, privCli *skupp
 	log.Printf("%s : Create Subscriptions", step)
 	for _, cli := range cliList {
 		if err := cli.CreateSubscription(step); err != nil {
-			return fmt.Errorf("%s : %s", step, err.Error())
+			if !strings.Contains(err.Error(), "\"skupper-operator\" already exists") {
+				return fmt.Errorf("%s : %s", step, err.Error())
+			}
 		}
+		skupper_ocp_smoke.PrintIfDebug(step, ": subscription created for", cli.Namespace)
+	}
 
-		// Wait until the operator is up
+	// Check if subscriptions are active
+	log.Printf("%s : Wait Subscriptions setup", step)
+	for _, cli := range cliList {
 		if err := cli.WaitPodsStatus(ctx, "Running", cli.WaitLimit(), "skupper-site-controller", step); err != nil {
 			return fmt.Errorf("%s : %s", step, err.Error())
 		}
-		skupper_ocp_smoke.PrintIfDebug(step, ": subscription created for", cli.Namespace)
 	}
 
 	// Public Skupper instance
