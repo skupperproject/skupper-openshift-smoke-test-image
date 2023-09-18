@@ -1,6 +1,7 @@
 VERSION := $(shell git describe --tags --dirty=-modified --always)
 SMOKE_TEST_IMAGE := quay.io/skupper/skupper-ocp-smoke-test-image
 DOCKER := docker
+TEST_BINARIES_FOLDER := /image/bin
 
 all: build-smoke-image
 	$(info ************  Information ************)
@@ -20,3 +21,7 @@ push-smoke-image:
 	$(info Pushing the image)
 	${DOCKER} push ${SMOKE_TEST_IMAGE}
 	${DOCKER} push ${SMOKE_TEST_IMAGE}:${VERSION}
+
+build-tests:
+	mkdir -p ${TEST_BINARIES_FOLDER}
+	go test -c -v ./cmd/... -o ${TEST_BINARIES_FOLDER}/skupper-ocp-smoke-test

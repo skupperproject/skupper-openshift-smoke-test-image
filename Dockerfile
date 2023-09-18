@@ -3,9 +3,8 @@ FROM golang:1.19 AS builder
 WORKDIR /image
 COPY . .
 
-WORKDIR /image/src
 RUN go mod download
-RUN make all
+RUN make build-tests
 RUN go get github.com/jstemmer/go-junit-report
 RUN go install github.com/jstemmer/go-junit-report
 
@@ -17,6 +16,6 @@ WORKDIR /app
 
 COPY --from=builder /image/bin/skupper-ocp-smoke-test .
 COPY --from=builder /go/bin/go-junit-report .
-COPY run-test.sh .
+COPY scripts/run-test.sh .
 CMD './run-test.sh'
 
