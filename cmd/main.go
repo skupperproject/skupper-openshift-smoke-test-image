@@ -103,6 +103,8 @@ func setup(ctx context.Context, pubCli *skupper_ocp_smoke.Client, privCli *skupp
 			"router-mode":      "interior",
 			"console-user":     "admin",
 			"console-password": "changeme",
+			pubCli.SiteConfigRunAsUserKey(): pubCli.GetRunAsUserOrDefault(pubCli.SiteConfigRunAsUser(), ctx),
+			pubCli.SiteConfigRunAsGroupKey(): pubCli.SiteConfigRunAsGroup(),
 		},
 	}
 
@@ -131,6 +133,8 @@ func setup(ctx context.Context, pubCli *skupper_ocp_smoke.Client, privCli *skupp
 			"router-mode":      "interior",
 			"console-user":     "admin",
 			"console-password": "changeme",
+			privCli.SiteConfigRunAsUserKey(): privCli.GetRunAsUserOrDefault(privCli.SiteConfigRunAsUser(), ctx),
+			privCli.SiteConfigRunAsGroupKey(): privCli.SiteConfigRunAsGroup(),
 		},
 	}
 

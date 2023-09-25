@@ -85,3 +85,19 @@ func (cli *Client) OperatorNameSpace() string {
 func (cli *Client) OperatorCatalog() string {
 	return operatorcatalog
 }
+
+func (cli *Client) SiteConfigRunAsUserKey() string {
+	return SiteConfigRunAsUserKey
+}
+
+func (cli *Client) SiteConfigRunAsGroupKey() string {
+	return SiteConfigRunAsGroupKey
+}
+
+func (cli *Client) SiteConfigRunAsUser() string {
+	return SiteConfigRunAsUser
+}
+
+func (cli *Client) SiteConfigRunAsGroup() string {
+	return SiteConfigRunAsGroup
+}

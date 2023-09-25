@@ -6,28 +6,36 @@ import (
 )
 
 const (
-	PUBKUBECONFIGFILE  = "/config/kubeconfig"
-	PRIVKUBECONFIGFILE = "/config/kubeconfig"
-	PUBNS              = "pub-test-ns"
-	PRIVNS             = "priv-test-ns"
-	OPERATORGROUP      = "test-operator-group"
-	STARTINGCSV        = ""
-	SUBSCRIPTION       = "skupper-operator"
-	WAITLIMIT          = 120
-	OPERATORNAME       = "skupper-operator"
-	OPERATORNAMESPACE  = "openshift-marketplace"
-	OPERATORCATALOG    = "redhat-operators"
+	PUBKUBECONFIGFILE       string = "/config/kubeconfig"
+	PRIVKUBECONFIGFILE      string = "/config/kubeconfig"
+	PUBNS                   string = "pub-test-ns"
+	PRIVNS                  string = "priv-test-ns"
+	OPERATORGROUP           string = "test-operator-group"
+	STARTINGCSV             string = ""
+	SUBSCRIPTION            string = "skupper-operator"
+	WAITLIMIT               int    = 120
+	OPERATORNAME            string = "skupper-operator"
+	OPERATORNAMESPACE       string = "openshift-marketplace"
+	OPERATORCATALOG         string = "redhat-operators"
+	SITECONFIGRUNASUSERKEY  string = "run-as-user"
+	SITECONFIGRUNASGROUPKEY string = "run-as-group"
+	SITECONFIGRUNASUSER     string = "1000"
+	SITECONFIGRUNASGROUP    string = "2000"
 )
 
 var (
-	debug             = os.Getenv("QUIET") == ""
-	operatorgroupname = StrDefault(os.Getenv("OPERATORGROUP"), OPERATORGROUP)
-	Startingcsv       = StrDefault(os.Getenv("STARTINGCSV"), STARTINGCSV)
-	subscriptionname  = StrDefault(os.Getenv("SUBSCRIPTION"), SUBSCRIPTION)
-	Waitlimit         = IntDefault(os.Getenv("WAITLIMIT"), WAITLIMIT)
-	operatorname      = StrDefault(os.Getenv("OPERATORNAME"), OPERATORNAME)
-	operatornamespace = StrDefault(os.Getenv("OPERATORNAMESPACE"), OPERATORNAMESPACE)
-	operatorcatalog   = StrDefault(os.Getenv("OPERATORCATALOG"), OPERATORCATALOG)
+	debug                   = os.Getenv("QUIET") == ""
+	operatorgroupname       = StrDefault(os.Getenv("OPERATORGROUP"), OPERATORGROUP)
+	Startingcsv             = StrDefault(os.Getenv("STARTINGCSV"), STARTINGCSV)
+	subscriptionname        = StrDefault(os.Getenv("SUBSCRIPTION"), SUBSCRIPTION)
+	Waitlimit               = IntDefault(os.Getenv("WAITLIMIT"), WAITLIMIT)
+	operatorname            = StrDefault(os.Getenv("OPERATORNAME"), OPERATORNAME)
+	operatornamespace       = StrDefault(os.Getenv("OPERATORNAMESPACE"), OPERATORNAMESPACE)
+	operatorcatalog         = StrDefault(os.Getenv("OPERATORCATALOG"), OPERATORCATALOG)
+	SiteConfigRunAsUserKey  = StrDefault(os.Getenv("SITECONFIGRUNASUSERKEY"), SITECONFIGRUNASUSERKEY)
+	SiteConfigRunAsGroupKey = StrDefault(os.Getenv("SITECONFIGRUNASGROUPKEY"), SITECONFIGRUNASGROUPKEY)
+	SiteConfigRunAsUser     = StrDefault(os.Getenv("SITECONFIGRUNASUSER"), SITECONFIGRUNASUSER)
+	SiteConfigRunAsGroup    = StrDefault(os.Getenv("SITECONFIGRUNASGROUP"), SITECONFIGRUNASGROUP)
 )
 
 func StrDefault(val string, dflt string) string {
