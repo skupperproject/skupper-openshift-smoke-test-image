@@ -17,11 +17,17 @@ func (cli *Client) IsSkupperOperatorAvailable(step string, operatorName string, 
 	if len(configResources.APIResources) > 0 {
 		packManifestCli, err := packmanifest.NewForConfig(cli.RestConfig)
 		if err != nil {
+			if debug {
+				fmt.Printf("DEBUG : Unable to access pack manifest client - %v\n", err)
+			}
 			return fmt.Errorf("unable to access cluster resources - RestConfig")
 		}
 
 		packManifest, err := packmanifest.Interface.OperatorsV1(packManifestCli).PackageManifests(opNamespace).Get(context.Background(), operatorName, v1.GetOptions{})
 		if err != nil {
+			if debug {
+				fmt.Printf("DEBUG : Unable to access package manifest client - %v\n", err)
+			}
 			return fmt.Errorf("unable to access cluster resources - OperatorList")
 		}
 
