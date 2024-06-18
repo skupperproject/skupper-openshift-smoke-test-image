@@ -117,6 +117,7 @@ spec:
       containers:
       - name: skupper-ocp-smoke-test
         image: quay.io/skupper/skupper-ocp-smoke-test-image
+        imagePullPolicy: Always
         env:
           - name: PUBKUBECONFIG
             value: /config/${1}
