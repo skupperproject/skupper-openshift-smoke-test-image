@@ -23,17 +23,22 @@ func (cli *Client) IsSkupperOperatorAvailable(step string, operatorName string, 
 			return fmt.Errorf("unable to access cluster resources - RestConfig")
 		}
 
-		packManifest, err := packmanifest.Interface.OperatorsV1(packManifestCli).PackageManifests(opNamespace).Get(context.Background(), operatorName, v1.GetOptions{})
-		if err != nil {
-			if debug {
-				fmt.Printf("DEBUG : Unable to access package manifest client - %v\n", err)
+		PrintIfDebug(step, " : Looping over manifests")
+		for i := 0; i < 5; i++ {
+			packManifest, err := packmanifest.Interface.OperatorsV1(packManifestCli).PackageManifests(opNamespace).Get(context.Background(), operatorName, v1.GetOptions{})
+			if err != nil {
+				if debug {
+					fmt.Printf("DEBUG : Unable to access package manifest client - %v\n", err)
+				}
+				return fmt.Errorf("unable to access cluster resources - OperatorList")
 			}
-			return fmt.Errorf("unable to access cluster resources - OperatorList")
-		}
 
-		if packManifest.Status.CatalogSource == opCatalogSource {
-			PrintIfDebug(step, " : Operator", operatorName, "available to be installed from ", packManifest.Status.CatalogSource)
-			return nil
+			if packManifest.Status.CatalogSource == opCatalogSource {
+				PrintIfDebug(step, " : Operator", operatorName, "available to be installed from ", packManifest.Status.CatalogSource)
+				return nil
+			} else {
+				PrintIfDebug(step, " : Operator", operatorName, "not found. Checking next one")
+			}
 		}
 	}
 	return fmt.Errorf("unable to find Skupper Operator ( %s ). Please ensure that it is available on %s catalog", operatorName, opCatalogSource)
