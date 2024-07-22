@@ -12,6 +12,7 @@ const (
 	PRIVNS                  string = "priv-test-ns"
 	OPERATORGROUP           string = "test-operator-group"
 	STARTINGCSV             string = ""
+	CHANNEL                 string = "stable"
 	SUBSCRIPTION            string = "skupper-operator"
 	WAITLIMIT               int    = 120
 	OPERATORNAME            string = "skupper-operator"
@@ -28,6 +29,7 @@ var (
 	operatorgroupname       = StrDefault(os.Getenv("OPERATORGROUP"), OPERATORGROUP)
 	Startingcsv             = StrDefault(os.Getenv("STARTINGCSV"), STARTINGCSV)
 	subscriptionname        = StrDefault(os.Getenv("SUBSCRIPTION"), SUBSCRIPTION)
+	channel                 = StrDefault(os.Getenv("CHANNEL"), CHANNEL)
 	Waitlimit               = IntDefault(os.Getenv("WAITLIMIT"), WAITLIMIT)
 	operatorname            = StrDefault(os.Getenv("OPERATORNAME"), OPERATORNAME)
 	operatornamespace       = StrDefault(os.Getenv("OPERATORNAMESPACE"), OPERATORNAMESPACE)
