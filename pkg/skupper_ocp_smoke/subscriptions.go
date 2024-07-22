@@ -35,7 +35,7 @@ func (cli *Client) CreateSubscription(step string) error {
 				CatalogSource:          cli.OperatorCatalog(),
 				CatalogSourceNamespace: cli.OperatorNameSpace(),
 				Package:                cli.OperatorName(),
-				Channel:                "alpha",
+				Channel:                cli.Channel(),
 				StartingCSV:            cli.StartingCSV(),
 				InstallPlanApproval:    "Automatic",
 			},

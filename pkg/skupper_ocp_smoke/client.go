@@ -70,6 +70,10 @@ func (cli *Client) SubscriptionName() string {
 	return subscriptionname
 }
 
+func (cli *Client) Channel() string {
+	return channel
+}
+
 func (cli *Client) WaitLimit() int {
 	return Waitlimit
 }
