@@ -24,7 +24,7 @@ func (cli *Client) IsSkupperOperatorAvailable(step string, operatorName string, 
 		}
 
 		PrintIfDebug(step, " : Looping over manifests")
-		for i := 0; i < 5; i++ {
+		for i := 0; i < 100; i++ {
 			packManifest, err := packmanifest.Interface.OperatorsV1(packManifestCli).PackageManifests(opNamespace).Get(context.Background(), operatorName, v1.GetOptions{})
 			if err != nil {
 				if debug {
