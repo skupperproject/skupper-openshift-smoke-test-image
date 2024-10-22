@@ -3,15 +3,17 @@ package main
 import (
 	"context"
 	"fmt"
-	v13 "k8s.io/api/batch/v1"
-	v1 "k8s.io/api/core/v1"
-	v12 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"log"
 	"os"
+	"os/exec"
 	"skupper_ocp_smoke/pkg/skupper_ocp_smoke"
 	"strconv"
 	"strings"
 	"time"
+
+	v13 "k8s.io/api/batch/v1"
+	v1 "k8s.io/api/core/v1"
+	v12 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
 func setup(ctx context.Context, pubCli *skupper_ocp_smoke.Client, privCli *skupper_ocp_smoke.Client) error {
@@ -100,10 +102,10 @@ func setup(ctx context.Context, pubCli *skupper_ocp_smoke.Client, privCli *skupp
 		},
 		Immutable: nil,
 		Data: map[string]string{
-			"router-mode":      "interior",
-			"console-user":     "admin",
-			"console-password": "changeme",
-			pubCli.SiteConfigRunAsUserKey(): pubCli.GetRunAsUserOrDefault(pubCli.SiteConfigRunAsUser(), ctx),
+			"router-mode":                    "interior",
+			"console-user":                   "admin",
+			"console-password":               "changeme",
+			pubCli.SiteConfigRunAsUserKey():  pubCli.GetRunAsUserOrDefault(pubCli.SiteConfigRunAsUser(), ctx),
 			pubCli.SiteConfigRunAsGroupKey(): pubCli.SiteConfigRunAsGroup(),
 		},
 	}
@@ -130,10 +132,10 @@ func setup(ctx context.Context, pubCli *skupper_ocp_smoke.Client, privCli *skupp
 		},
 		Immutable: nil,
 		Data: map[string]string{
-			"router-mode":      "interior",
-			"console-user":     "admin",
-			"console-password": "changeme",
-			privCli.SiteConfigRunAsUserKey(): privCli.GetRunAsUserOrDefault(privCli.SiteConfigRunAsUser(), ctx),
+			"router-mode":                     "interior",
+			"console-user":                    "admin",
+			"console-password":                "changeme",
+			privCli.SiteConfigRunAsUserKey():  privCli.GetRunAsUserOrDefault(privCli.SiteConfigRunAsUser(), ctx),
 			privCli.SiteConfigRunAsGroupKey(): privCli.SiteConfigRunAsGroup(),
 		},
 	}
@@ -191,18 +193,23 @@ func setup(ctx context.Context, pubCli *skupper_ocp_smoke.Client, privCli *skupp
 	return nil
 }
 
+// Run curl and check if it is available in the public namespace
 func runTheJob(ctx context.Context, pubCli *skupper_ocp_smoke.Client, limit int) error {
 
-	// Run curl and check if it is available in the public namespace
-	backoffLimit := int32(0)
+	// Everything may not be just right at first, so we retry
+	backoffLimit := int32(10)
 
 	// Container Definition
 	container := []v1.Container{
 		{
-			Name:  "testjob",
-			Image: "curlimages/curl",
+			Name:            "testjob",
+			Image:           "curlimages/curl",
+			ImagePullPolicy: v1.PullIfNotPresent,
 			Command: []string{
 				"curl",
+				"-v",
+				"-m", // curl's default timeout is 2 minutes; if we do not hear back
+				"10", // in 10 seconds, it should be safe to retry, already
 				"http://priv-deploy:8080",
 			},
 		},
@@ -227,6 +234,38 @@ func runTheJob(ctx context.Context, pubCli *skupper_ocp_smoke.Client, limit int)
 			},
 		},
 	}
+
+	// Gives some debugging info at the end of the job; failure or not
+	// TODO: make some 'util' function to help on the kubectl
+	defer func() {
+		log.Printf("Debug info")
+		cmd := exec.Command(
+			"kubectl",
+			"--kubeconfig",
+			skupper_ocp_smoke.KubeConfigDefault(skupper_ocp_smoke.PUBKUBECONFIGFILE, "PUBKUBECONFIG"),
+			"-n",
+			pubCli.Namespace,
+			"logs",
+			fmt.Sprintf("job/%s", pubJob.ObjectMeta.Name),
+		)
+		cmd.Stderr = os.Stderr
+		cmd.Stdout = os.Stdout
+		cmd.Run()
+		cmd = exec.Command(
+			"kubectl",
+			"--kubeconfig",
+			skupper_ocp_smoke.KubeConfigDefault(skupper_ocp_smoke.PUBKUBECONFIGFILE, "PUBKUBECONFIG"),
+			"-n",
+			pubCli.Namespace,
+			"get",
+			fmt.Sprintf("job/%s", pubJob.ObjectMeta.Name),
+			"-o",
+			"yaml",
+		)
+		cmd.Stderr = os.Stderr
+		cmd.Stdout = os.Stdout
+		cmd.Run()
+	}()
 
 	log.Printf("runtest : Starting job to validate test execution")
 	_, err := pubCli.KubeClient.BatchV1().Jobs(pubCli.Namespace).Create(ctx, &pubJob, v12.CreateOptions{})
