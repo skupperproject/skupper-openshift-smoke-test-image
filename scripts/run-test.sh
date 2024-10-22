@@ -1,3 +1,9 @@
 #!/bin/bash
-/app/skupper-ocp-smoke-test -test.v | tee /tmp/test.out
-cat /tmp/test.out | /app/go-junit-report | tee /result/junit.xml
+
+set -o pipefail
+/app/skupper-ocp-smoke-test -test.v | tee -i /tmp/test.out
+ret=$?
+
+/app/go-junit-report < /tmp/test.out | tee /result/junit.xml
+
+exit $ret
