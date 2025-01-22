@@ -203,7 +203,7 @@ func runTheJob(ctx context.Context, pubCli *skupper_ocp_smoke.Client, limit int)
 	container := []v1.Container{
 		{
 			Name:            "testjob",
-			Image:           "curlimages/curl",
+			Image:           "quay.io/skupper/lanyard:latest",
 			ImagePullPolicy: v1.PullIfNotPresent,
 			Command: []string{
 				"curl",
