@@ -18,4 +18,4 @@ WORKDIR /app
 COPY --from=builder /image/bin/skupper-ocp-smoke-test .
 COPY --from=builder /go/bin/go-junit-report .
 COPY scripts/run-test.sh .
-CMD './run-test.sh'
+CMD ["./run-test.sh"]
