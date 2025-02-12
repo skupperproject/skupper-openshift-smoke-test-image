@@ -173,7 +173,7 @@ func setup(ctx context.Context, pubCli *skupper_ocp_smoke.Client, privCli *skupp
 	log.Printf("%s : Link creation validated", step)
 
 	// Create the deployment in Public
-	if err = privCli.CreateDeploymentWithSkupper(ctx, "priv-deploy", "hello-world-frontend", "8080"); err != nil {
+	if err = privCli.CreateDeploymentWithSkupper(ctx, "priv-deploy", skupper_ocp_smoke.FrontendImage, "8080"); err != nil {
 		return fmt.Errorf("%s : %s", step, err.Error())
 	}
 	skupper_ocp_smoke.PrintIfDebug(step, ": Deployment created in", privCli.Namespace)
@@ -203,7 +203,7 @@ func runTheJob(ctx context.Context, pubCli *skupper_ocp_smoke.Client, limit int)
 	container := []v1.Container{
 		{
 			Name:            "testjob",
-			Image:           "quay.io/skupper/lanyard:latest",
+			Image:           skupper_ocp_smoke.LanyardImage,
 			ImagePullPolicy: v1.PullIfNotPresent,
 			Command: []string{
 				"curl",

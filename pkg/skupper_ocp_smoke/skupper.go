@@ -142,7 +142,7 @@ func (cli *Client) CreateDeploymentWithSkupper(ctx context.Context, name string,
 					Containers: []v1.Container{
 						{
 							Name:            name,
-							Image:           "quay.io/skupper/" + image,
+							Image:           image,
 							ImagePullPolicy: v1.PullIfNotPresent},
 					},
 					RestartPolicy: v1.RestartPolicyAlways,
