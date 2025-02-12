@@ -155,3 +155,21 @@ Docker / Podman
        completed, like the link creation or the test to run.
        If you need more time, you can specify it using this variable. It can be
        useful when using multiple clusters.
+
+## Specify the frontend and Lanyard image address
+
+   If for some reason you need to use a custom image for Lanyard and/or Frontend, you can specify them, this way : 
+
+   "-- env LANYARDIMAGE=quay.io/alternative-lanyar"
+   ** This specifies the address of the lanyard image. By default it is quay.io/skupper/lanyard:latest
+  
+   ""-- env FRONTENDIMAGE=quay.io/alternative-frontend
+   ** This specifies the address of the frontend image. By default it is quay.io/skupper/hello-world-frontend
+
+   If you are using Openshift, you must define the images in the YAML, this way : 
+
+     - name: LANYARDIMAGE
+       value: "quay.io/alternative-lanyard"
+     - name: FRONTENDIMAGE
+       value : "quay.io/alternative-frontend"
+

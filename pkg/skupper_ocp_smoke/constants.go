@@ -22,6 +22,8 @@ const (
 	SITECONFIGRUNASGROUPKEY string = "run-as-group"
 	SITECONFIGRUNASUSER     string = "1000"
 	SITECONFIGRUNASGROUP    string = "2000"
+	LANYARDIMAGE            string = "quay.io/skupper/lanyard:latest"
+	FRONTENDIMAGE           string = "quay.io/skupper/hello-world-frontend"
 )
 
 var (
@@ -38,6 +40,8 @@ var (
 	SiteConfigRunAsGroupKey = StrDefault(os.Getenv("SITECONFIGRUNASGROUPKEY"), SITECONFIGRUNASGROUPKEY)
 	SiteConfigRunAsUser     = StrDefault(os.Getenv("SITECONFIGRUNASUSER"), SITECONFIGRUNASUSER)
 	SiteConfigRunAsGroup    = StrDefault(os.Getenv("SITECONFIGRUNASGROUP"), SITECONFIGRUNASGROUP)
+	LanyardImage            = StrDefault(os.Getenv("LANYARDIMAGE"), LANYARDIMAGE)
+	FrontendImage           = StrDefault(os.Getenv("FRONTENDIMAGE"), FRONTENDIMAGE)
 )
 
 func StrDefault(val string, dflt string) string {
